@@ -78,7 +78,7 @@ export default {
                   width: 100,
                   height: 10
                 },
-                name:"rectangle",
+                name:"line",
                 bkType:0,
                 fillStyle:"black"
               }
