@@ -46,7 +46,7 @@ export default {
       thisnode: "",
       tools: [
         {
-          title: "线对象",
+          labeltitle: "线对象",
           children: [
             {
               text: '',
@@ -114,17 +114,7 @@ export default {
 
       }
     },
-    drag(e) {
-      var params = {
-        text: '',
-        rect: {
-          width: 200,
-          height: 200
-        },
-        name: "liangyuxuan",
-        iconFamily: "topology",
-        icon: "\ue690"
-      }
+    drag(e,params) {
       e.dataTransfer.setData('Topology', JSON.stringify(params))
       setTimeout(() => {
         console.log(e.dataTransfer.getData("Topology"))
