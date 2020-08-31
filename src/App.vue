@@ -6,7 +6,7 @@
         class="el-menu-vertical-demo"
       >
         <el-submenu
-          :index="index"
+          :index="toString(index+1)"
           v-for="(item,index) in tools"
           :key="index"
         >
@@ -15,7 +15,7 @@
           </template>
           <el-menu-item-group>
             <el-menu-item
-              :index="index+'-'+index1"
+              :index="toString(index+1+'-'+index1+1)"
               v-for="(itemItem,index1) in item.children"
               :key="index1"
             >
