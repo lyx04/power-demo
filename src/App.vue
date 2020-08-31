@@ -20,6 +20,7 @@
               :key="index1"
             >
               <i
+                :title="itemItem.name"
                 :class="itemItem.iconname+' '+itemItem.iconFamily"
                 @dragstart="drag($event,itemItem.data)"
                 draggable="true"
@@ -39,7 +40,7 @@
 </template>
 
 <script>
-import { Topology, Node, registerNode } from '@topology/core';
+import { Topology, registerNode } from '@topology/core';
 import { MyShape, myAnchors } from './iconinit'
 registerNode("HlIcon", MyShape, myAnchors)
 export default {
@@ -55,32 +56,111 @@ export default {
         {
           labeltitle: "线对象",
           children: [
+            // {
+            //   iconname: "topology-link",
+            //   iconFamily: "topology",
+            //   data: {
+            //     text: '',
+            //     rect: {
+            //       width: 50,
+            //       height: 50
+            //     },
+            //     name: "HlIcon",
+            //     iconFamily: "topology",
+            //     icon: "\ue63a"
+            //   }
+            // },
             {
-              iconname: "topology-link",
-              iconFamily: "topology",
+              iconname: "icon-hengxian-",
+              iconFamily: "iconfont",
+              name: "横线",
               data: {
-                text: '',
+                text: "",
+                rect: {
+                  width: 100,
+                  height: 100
+                },
+                name: "line",
+                bkType: 0,
+                strokeStyle: "red",
+              }
+            },
+            {
+              iconname: "icon-xuxian",
+              iconFamily: "iconfont",
+              name: "虚线",
+              data: {
+                text: "",
+                rect: {
+                  width: 100,
+                  height: 100
+                },
+                name: "line",
+                bkType: 0,
+                strokeStyle: "red",
+                lineDash: [5, 5]
+              }
+            }
+          ]
+        },
+        {
+          labeltitle: "变压器",
+          children: [
+            {
+              iconname: "icon-srzdyhgq",
+              iconFamily: "iconfont",
+              name: "双绕组",
+              data: {
                 rect: {
                   width: 50,
                   height: 50
                 },
                 name: "HlIcon",
-                iconFamily: "topology",
+                iconFamily: "iconfont",
                 icon: "\ue63a"
               }
             },
-            {
-              iconname: "icon-hengxian-",
+             {
+              iconname: "icon-sanrzbyq_a",
               iconFamily: "iconfont",
+              name: "双绕组",
               data: {
-                text: "",
                 rect: {
-                  width: 100,
-                  height: 10
+                  width: 50,
+                  height: 50
                 },
-                name:"line",
-                bkType:0,
-                fillStyle:"black"
+                name: "HlIcon",
+                iconFamily: "iconfont",
+                icon: "\ue624"
+              }
+            },
+            {
+              iconname: "icon-srzbyq_p",
+              iconFamily: "iconfont",
+              name: "双绕组",
+              data: {
+                rect: {
+                  width: 50,
+                  height: 50
+                },
+                name: "HlIcon",
+                iconFamily: "iconfont",
+                icon: "\ue636"
+              }
+            },
+
+             {
+              iconname: "icon-sanrzbyq_j",
+              iconFamily: "iconfont",
+              name: "双绕组",
+              data: {
+                rect: {
+                  width: 50,
+                  height: 50
+                },
+                name: "HlIcon",
+                iconFamily: "iconfont",
+                icon: "\ue627"
               }
             }
           ]
@@ -105,8 +185,6 @@ export default {
       console.log(this.canvas.data)
     },
     getText() {
-      var node = new Node(this.thisnode)
-      console.log(this.canvas.getValue(node.id, 'text'))
 
     },
     setDate() {
@@ -141,18 +219,6 @@ export default {
     },
     drag(e, params) {
       e.dataTransfer.setData('Topology', JSON.stringify(params))
-      // eslint-disable-next-line no-useless-escape
-      // e.dataTransfer.setData('Topology', JSON.stringify(params))
-      // setInterval(() => {
-      //   console.log(1)
-      //   params.text = params.text += 1
-      //   e.dataTransfer.setData('Topology', JSON.stringify(params))
-      //   // new Node().emitRender()
-      // }, 3000)
-      // var a = this.canvas.addNode(new Node(params), true);
-      // this.canvas.open(a)
-      // this.canvas.render()
-
     }
   }
 }
@@ -172,6 +238,8 @@ i {
   font-size: 24px;
   font-style: normal;
   color: black !important;
+  display: inline-block;
+  width: 100%;
 }
 .left {
   float: left;
