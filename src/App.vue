@@ -55,6 +55,26 @@ export default {
       thisnode: "",
       tools: [
         {
+          labeltitle:"图形及文字",
+          children:[
+            {
+              iconname:'icon-wenzi',
+              iconFamily: "iconfont",
+              name:"文字",
+              data:{
+                text:'请输入文字',
+                rect:{
+                  width:100,
+                  height:100
+                },
+                name:"div",
+                bkType:0,
+                fillStyle:"white"
+              }
+            }
+          ]
+        },
+        {
           labeltitle: "线对象",
           children: [
             {
@@ -77,7 +97,7 @@ export default {
               iconFamily: "iconfont",
               name: "虚线",
               data: {
-                
+
                 text: "",
                 rect: {
                   width: 100,
@@ -156,9 +176,7 @@ export default {
         {
           labeltitle: "开断设备",
           children: [
-            {
-              iconname: ""
-            }
+           
           ]
         }
       ]
@@ -184,6 +202,8 @@ export default {
 
     },
     setDate() {
+      this.params.node.text = "这是修改的"
+      this.canvas.render()
       // 连接建立时触发
       // Socket.onopen = function () {
       //   // 验证webscoket连接是否建立，是否可以进行通信
