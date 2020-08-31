@@ -1,0 +1,31 @@
+import { Point, Direction } from '@topology/core';
+
+export function MyShape(ctx) {
+  ctx.beginPath();
+}
+// export function myIconRect(node) {
+//   node.iconRect = new Rect(node.rect.x, node.rect.y + 10, node.rect.width, (node.rect.height * 2) / 3 - 20);
+//   node.fullIconRect = node.rect;
+// }
+export function myAnchors(node) {
+  node.anchors.push(new Point(node.rect.x, node.rect.y + node.rect.height / 2, Direction.Left));
+  node.anchors.push(new Point(node.rect.x + node.rect.width / 2, node.rect.y, Direction.Up));
+  // node.anchors.push(new Point(node.rect.x + node.rect.width, node.rect.y + node.rect.height / 2, Direction.Right));
+  // node.anchors.push(new Point(node.rect.x + node.rect.width / 2, node.rect.y + node.rect.height, Direction.Bottom));
+
+  // // demo，其他自定义锚点。这里只是示例。
+  // for (let i = 10; i < 360; i += 10) {
+  //   if (i % 90 === 0) {
+  //     continue;
+  //   }
+
+  //   const direction = Math.floor(i / 90);
+  //   const pt = new Point(
+  //     node.rect.center.x + (Math.sin((i / 180) * Math.PI) * node.rect.width) / 2,
+  //     node.rect.center.y + (Math.cos((i / 180) * Math.PI) * node.rect.height) / 2,
+  //     direction
+  //   );
+  //   pt.hidden = true;
+  //   node.anchors.push(pt);
+  // }
+}
