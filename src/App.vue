@@ -31,7 +31,11 @@
         </el-submenu>
       </el-menu>
     </div>
-    <div id="appId"></div>
+    <div id="appId" @contextmenu="onContextMenu($event)"></div>
+    <!--右侧内容-->
+    <div class="right-content">
+      <canvas-props :props.sync="props" @change="onUpdateProps"></canvas-props>
+    </div>
     <div class="button">
       <button @click="getText">获取文字</button>
       <button @click="setDate">修改数据</button>
@@ -43,16 +47,16 @@
 <script>
 import { Topology, registerNode } from '@topology/core';
 import { MyShape, myAnchors } from './iconinit'
+import  CanvasProps from './components/CanvasProps'
 registerNode("HlIcon", MyShape, myAnchors)
 export default {
   name: 'App',
   components: {
-
+    CanvasProps
   },
   data() {
     return {
       canvas: "",
-      thisnode: "",
       tools: [
         {
           labeltitle: "线对象",
@@ -77,7 +81,7 @@ export default {
               iconFamily: "iconfont",
               name: "虚线",
               data: {
-                
+
                 text: "",
                 rect: {
                   width: 100,
@@ -161,7 +165,15 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      props: { // 右侧属性栏数据
+        node: null,
+        line: null,
+        nodes: null,
+        multi: false,
+        expand: false,
+        locked: false
+      },
     }
   },
   mounted() {
@@ -208,13 +220,112 @@ export default {
     },
     onMessage(event, data) {
       console.log(event, data)
-      if (event == "node" || event == "addNode") {
-        this.thisnode = data
-
-      }
+      setTimeout(() => {
+        switch (event) {
+          case 'node':
+          case 'addNode':
+            this.props = {
+              node: data,
+              line: null,
+              multi: false,
+              expand: this.props.expand,
+              nodes: null,
+              locked: data.locked
+            };
+            break;
+          case 'line':
+          case 'addLine':
+            this.props = {
+              node: null,
+              line: data,
+              multi: false,
+              nodes: null,
+              locked: data.locked
+            };
+            break;
+          case 'multi':
+            this.props = {
+              node: null,
+              line: null,
+              multi: true,
+              nodes: data.length > 1 ? data : null,
+              locked: this.getLocked({ nodes: data })
+            };
+            break;
+          case 'space':
+            this.props = {
+              node: null,
+              line: null,
+              multi: false,
+              nodes: null,
+              locked: false
+            };
+            break;
+          case 'moveOut':
+            break;
+          case 'moveNodes':
+          case 'resizeNodes':
+            if (data.length > 1) {
+              this.props = {
+                node: null,
+                line: null,
+                multi: true,
+                nodes: data,
+                locked: this.getLocked({ nodes: data })
+              };
+            } else {
+              this.props = {
+                node: data[0],
+                line: null,
+                multi: false,
+                nodes: null,
+                locked: false
+              };
+            }
+            break;
+          case 'resize':
+          case 'scale':
+          case 'locked':
+            break;
+        }
+      }, 0);
     },
     drag(e, params) {
       e.dataTransfer.setData('Topology', JSON.stringify(params))
+    },
+      // eslint-disable-next-line no-useless-escape
+      // e.dataTransfer.setData('Topology', JSON.stringify(params))
+      // setInterval(() => {
+      //   console.log(1)
+      //   params.text = params.text += 1
+      //   e.dataTransfer.setData('Topology', JSON.stringify(params))
+      //   // new Node().emitRender()
+      // }, 3000)
+      // var a = this.canvas.addNode(new Node(params), true);
+      // this.canvas.open(a)
+      // this.canvas.render()
+    //从绘
+    onUpdateProps(node) {
+      // 如果是node属性改变，需要传入node，重新计算node相关属性值
+      // 如果是line属性改变，无需传参
+      this.canvas.updateProps(node);
+    },
+    // 右键
+    onContextMenu(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (event.clientY + 360 < document.body.clientHeight) {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          top: event.clientY + 'px'
+        };
+      } else {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          bottom: document.body.clientHeight - event.clientY + 'px'
+        };
+      }
     }
   }
 }
@@ -232,7 +343,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
-  font-size: 0;
+  font-size: 14px;
 }
 i.icon {
   font-family: topology;
@@ -260,4 +371,14 @@ i.icon {
 .topology-ipad:before {
   content: '\e664';
 }
+  .right-content{
+    float: right;
+    width: 200px;
+    height: 100vh;
+    padding: 0.1rem 0;
+    background-color: #f8f8f8;
+    border-left: 1px solid #d9d9d9;
+    overflow-y: auto;
+    position: relative;
+  }
 </style>
