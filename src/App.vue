@@ -20,7 +20,7 @@
               :key="index1"
             >
               <i
-                :class="itemItem.iconname"
+                :class="itemItem.iconname+' '+itemItem.iconFamily"
                 @dragstart="drag($event,itemItem.data)"
                 draggable="true"
               ></i>
@@ -35,7 +35,6 @@
       <button @click="setDate">修改数据</button>
       <button @click="save">保存</button>
     </div>
-    <div class="iconfont icon-10"></div>
   </div>
 </template>
 
@@ -58,6 +57,7 @@ export default {
           children: [
             {
               iconname: "topology-link",
+              iconFamily: "topology",
               data: {
                 text: '',
                 rect: {
@@ -68,7 +68,20 @@ export default {
                 iconFamily: "topology",
                 icon: "\ue63a"
               }
-
+            },
+            {
+              iconname: "icon-hengxian-",
+              iconFamily: "iconfont",
+              data: {
+                text: "",
+                rect: {
+                  width: 100,
+                  height: 10
+                },
+                name:"rectangle",
+                bkType:0,
+                fillStyle:"black"
+              }
             }
           ]
         }
@@ -128,9 +141,6 @@ export default {
     },
     drag(e, params) {
       e.dataTransfer.setData('Topology', JSON.stringify(params))
-      setTimeout(() => {
-        console.log(e.dataTransfer.getData("Topology"))
-      }, 3000)
       // eslint-disable-next-line no-useless-escape
       // e.dataTransfer.setData('Topology', JSON.stringify(params))
       // setInterval(() => {
