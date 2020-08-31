@@ -1,11 +1,26 @@
 <template>
   <div id="app">
     <div class="left">
-      <span
-        class="topology-cloud-code"
-        @dragstart="drag($event)"
-        draggable="true"
-      ></span>
+      <el-menu
+        default-active="1"
+        class="el-menu-vertical-demo"
+      >
+        <el-submenu index="1">
+          <template slot="title">
+            <span>导航一</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">
+              <i
+                class="topology-cloud-code"
+                @dragstart="drag($event)"
+                draggable="true"
+              ></i>
+            </el-menu-item>
+            <el-menu-item index="1-2">选项2</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+      </el-menu>
     </div>
     <div id="appId"></div>
     <div class="button">
@@ -18,8 +33,8 @@
 
 <script>
 import { Topology, Node, registerNode } from '@topology/core';
-import { MyShape,myAnchors } from './init'
-registerNode("liangyuxuan", MyShape,myAnchors)
+import { MyShape, myAnchors } from './iconinit'
+registerNode("liangyuxuan", MyShape, myAnchors)
 export default {
   name: 'App',
   components: {
@@ -28,7 +43,24 @@ export default {
   data() {
     return {
       canvas: "",
-      thisnode: ""
+      thisnode: "",
+      tools: [
+        {
+          title: "线对象",
+          children: [
+            {
+              text: '',
+              rect: {
+                width: 200,
+                height: 200
+              },
+              name: "liangyuxuan",
+              iconFamily: "topology",
+              icon: "\ue690"
+            }
+          ]
+        }
+      ]
     }
   },
   mounted() {
@@ -84,7 +116,7 @@ export default {
     },
     drag(e) {
       var params = {
-        text: '图形',
+        text: '',
         rect: {
           width: 200,
           height: 200
@@ -94,9 +126,9 @@ export default {
         icon: "\ue690"
       }
       e.dataTransfer.setData('Topology', JSON.stringify(params))
-      setTimeout(()=>{
+      setTimeout(() => {
         console.log(e.dataTransfer.getData("Topology"))
-      },3000)
+      }, 3000)
       // eslint-disable-next-line no-useless-escape
       // e.dataTransfer.setData('Topology', JSON.stringify(params))
       // setInterval(() => {
@@ -123,12 +155,15 @@ export default {
   margin-top: 60px;
   font-size: 0;
 }
-span {
+i {
   font-family: topology;
+  font-size: 24px;
+  font-style: normal;
+  color: black !important;
 }
 .left {
   float: left;
-  width: 100px;
+  width: 300px;
   height: 100%;
   background-color: white;
   color: black;
@@ -138,7 +173,6 @@ span {
 #appId {
   width: 1000px;
   height: 500px;
-  margin-left: 100px;
   display: inline-block;
   border: 1px solid black;
 }
