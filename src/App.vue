@@ -5,19 +5,26 @@
         default-active="1"
         class="el-menu-vertical-demo"
       >
-        <el-submenu index="1">
+        <el-submenu
+          :index="index"
+          v-for="(item,index) in tools"
+          :key="index"
+        >
           <template slot="title">
-            <span>导航一</span>
+            <span>{{item.labeltitle}}</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="1-1">
+            <el-menu-item
+              :index="index+'-'+index1"
+              v-for="(itemItem,index1) in item.children"
+              :key="index1"
+            >
               <i
-                class="topology-cloud-code"
-                @dragstart="drag($event)"
+                :class="itemItem.iconname"
+                @dragstart="drag($event,itemItem.data)"
                 draggable="true"
               ></i>
             </el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -35,7 +42,7 @@
 <script>
 import { Topology, Node, registerNode } from '@topology/core';
 import { MyShape, myAnchors } from './iconinit'
-registerNode("liangyuxuan", MyShape, myAnchors)
+registerNode("HlIcon", MyShape, myAnchors)
 export default {
   name: 'App',
   components: {
@@ -50,14 +57,18 @@ export default {
           labeltitle: "线对象",
           children: [
             {
-              text: '',
-              rect: {
-                width: 200,
-                height: 200
-              },
-              name: "liangyuxuan",
-              iconFamily: "topology",
-              icon: "\ue690"
+              iconname: "topology-link",
+              data: {
+                text: '',
+                rect: {
+                  width: 50,
+                  height: 50
+                },
+                name: "HlIcon",
+                iconFamily: "topology",
+                icon: "\ue63a"
+              }
+
             }
           ]
         }
@@ -115,7 +126,7 @@ export default {
 
       }
     },
-    drag(e,params) {
+    drag(e, params) {
       e.dataTransfer.setData('Topology', JSON.stringify(params))
       setTimeout(() => {
         console.log(e.dataTransfer.getData("Topology"))
