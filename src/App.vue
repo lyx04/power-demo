@@ -214,8 +214,8 @@ export default {
 
     },
     setDate() {
-      this.params.node.text = "这是修改的"
-      this.canvas.render()
+      // this.props.node.text = "这是修改的"
+      // this.canvas.render()
       // 连接建立时触发
       // Socket.onopen = function () {
       //   // 验证webscoket连接是否建立，是否可以进行通信
