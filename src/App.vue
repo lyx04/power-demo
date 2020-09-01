@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <!--头部-->
+    <canvas-headers @on-menu="onMenu" @on-state="toArrowType" :canvas="canvas"></canvas-headers>
+    <!--内容body-->
     <div class="left">
       <el-menu
         default-active="1"
@@ -19,7 +22,10 @@
               v-for="(itemItem,index1) in item.children"
               :key="index1"
             >
+              <img v-if='itemItem.name === "image"' :src="itemItem.data.image" style="width: 50px;height: 50px;display: block;" @dragstart="drag($event,itemItem.data)"
+                   draggable="true"/>
               <i
+                v-else
                 class="icon"
                 :title="itemItem.name"
                 :class="itemItem.iconname+' '+itemItem.iconFamily"
@@ -39,7 +45,7 @@
     <div class="button">
       <button @click="getText">获取文字</button>
       <button @click="setDate">修改数据</button>
-      <button @click="save">保存</button>
+      <img src="./assets/v.svg" style="width: 10px;height: 10px;display: block;"/>
     </div>
   </div>
 </template>
@@ -48,15 +54,17 @@
 import { Topology, registerNode } from '@topology/core';
 import { MyShape, myAnchors } from './iconinit'
 import  CanvasProps from './components/CanvasProps'
+import CanvasHeaders from './components/CanvasHeaders'
 registerNode("HlIcon", MyShape, myAnchors)
 export default {
   name: 'App',
   components: {
-    CanvasProps
+    CanvasProps,
+    CanvasHeaders
   },
   data() {
     return {
-      canvas: "",
+      canvas: {},
       tools: [
         {
           labeltitle:"图形及文字",
@@ -74,6 +82,19 @@ export default {
                 name:"div",
                 bkType:0,
                 fillStyle:"white"
+              }
+            },
+            {
+              name: 'image',
+              icon: 'icon-image',
+              data: {
+                text: '',
+                rect: {
+                  width: 50,
+                  height: 50
+                },
+                name: 'image',
+                image: require('./assets/v.svg')
               }
             }
           ]
@@ -207,11 +228,35 @@ export default {
     // this.canvas.render()
   },
   methods: {
-    save() {
-      console.log(this.canvas.data)
+    onMenu(value) {
+      switch (value) {
+        case 'save':
+          this.canvas.data.locked = 1
+          break;
+        case 'savePng':
+          this.canvas.saveAsImage('电力.png');
+          break;
+        case 'undo':
+          this.canvas.undo();
+          break;
+        case 'redo':
+          this.canvas.redo();
+          break;
+        case 'copy':
+          this.canvas.copy();
+          break;
+        case 'cut':
+          this.canvas.cut();
+          break;
+        case 'parse':
+          this.canvas.paste();
+          break;
+      }
+    },
+    toArrowType(val) {
+      this.canvas.data[val.key] = val.value
     },
     getText() {
-
     },
     setDate() {
       // this.props.node.text = "这是修改的"
