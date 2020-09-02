@@ -1,0 +1,8 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1296" height="882"><defs>
+    <style type="text/css">
+      @font-face {
+        font-family: 'topology';
+        src: url('http://at.alicdn.com/t/font_1331132_h688rvffmbc.ttf?t=1569311680797') format('truetype');
+      }
+    </style>
+  </defs><g><g id="0d3b4b0" name="square" text="Topology"><path fill="none" stroke="#222" paint-order="fill stroke markers" d=" M 320 130 L 420 130 L 420 230 L 320 230 L 320 130 Z" stroke-miterlimit="10" stroke-dasharray=""/><g><path fill="none" stroke="none"/><text fill="#222" stroke="none" font-family="&quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial " font-size="12px" font-style="normal" font-weight="normal" text-decoration="normal" x="370" y="211.28571428571428" text-anchor="middle" dominant-baseline="central">Topology</text></g><g><g><path fill="none" stroke="none"/><text fill="#2f54eb" stroke="none" font-family="topology" font-size="55px" font-style="normal" font-weight="normal" text-decoration="normal" x="370" y="167.5" text-anchor="middle" dominant-baseline="central">&#xe64d;</text></g></g></g></g></svg>
