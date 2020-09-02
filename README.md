@@ -3,7 +3,7 @@ power-demo
 
 # 画布默认参数
 combine
-div 正放心
+div 正方形
 rectangle 矩形
 circle 圆形
 triangle 三角

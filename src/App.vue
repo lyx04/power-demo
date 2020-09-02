@@ -109,7 +109,7 @@ export default {
   },
   data() {
     return {
-      canvas: "",
+      canvas:{},
       dialogFormVisible: false,
       formLabelWidth: "80px",
       meter: "",
