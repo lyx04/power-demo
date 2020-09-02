@@ -6,8 +6,8 @@
         class="el-menu-vertical-demo"
       >
         <el-submenu
-          :index="toString(index+1)"
           v-for="(item,index) in tools"
+          :index="item.findex"
           :key="index"
         >
           <template slot="title">
@@ -15,15 +15,15 @@
           </template>
           <el-menu-item-group>
             <el-menu-item
-              :index="toString(index+1+'-'+index1+1)"
               v-for="(itemItem,index1) in item.children"
+              :index="item.findex+'-'+itemItem.cindex"
               :key="index1"
             >
               <i
                 class="icon"
                 :title="itemItem.name"
                 :class="itemItem.iconname+' '+itemItem.iconFamily"
-                @dragstart="drag($event,itemItem.data)"
+                @dragstart="drag($event,itemItem)"
                 draggable="true"
               ></i>
             </el-menu-item>
@@ -31,24 +31,69 @@
         </el-submenu>
       </el-menu>
     </div>
-    <div id="appId" @contextmenu="onContextMenu($event)"></div>
+
+    <div
+      id="appId"
+      @contextmenu="onContextMenu($event)"
+    ></div>
     <!--右侧内容-->
     <div class="right-content">
-      <canvas-props :props.sync="props" @change="onUpdateProps"></canvas-props>
+      <canvas-props
+        :props.sync="props"
+        @change="onUpdateProps"
+      ></canvas-props>
     </div>
     <div class="button">
       <button @click="getText">获取文字</button>
       <button @click="setDate">修改数据</button>
       <button @click="save">保存</button>
     </div>
+    <el-dialog
+      title="量测组"
+      :visible.sync="dialogFormVisible"
+      width='30%'
+      :destroy-on-close="true"
+    >
+      <el-form :model="form">
+        <el-form-item
+          label="测量组"
+          :label-width="formLabelWidth"
+        >
+          <el-select
+            multiple
+            v-model="form.region"
+            placeholder="请选择活动区域"
+          >
+            <el-option
+              label="蒙牛配电室的调试"
+              value="1"
+            ></el-option>
+            <el-option
+              label="蒙牛配电室的调试机房"
+              value="2"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="survey"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { Topology, registerNode } from '@topology/core';
-import { MyShape, myAnchors } from './iconinit'
-import  CanvasProps from './components/CanvasProps'
-registerNode("HlIcon", MyShape, myAnchors)
+import { MyShape } from './iconinit'
+import CanvasProps from './components/CanvasProps'
+registerNode("HlIcon", MyShape)
 export default {
   name: 'App',
   components: {
@@ -57,31 +102,61 @@ export default {
   data() {
     return {
       canvas: "",
+      dialogFormVisible: false,
+      formLabelWidth: "80px",
+      meter: "",
+      form: {
+        region: ""
+      },
       tools: [
         {
-          labeltitle:"图形及文字",
-          children:[
+          findex: "1",
+          labeltitle: "图形及文字",
+          children: [
             {
-              iconname:'icon-wenzi',
+              cindex: "1",
+              iconname: 'icon-wenzi',
               iconFamily: "iconfont",
-              name:"文字",
-              data:{
-                text:'请输入文字',
-                rect:{
-                  width:100,
-                  height:100
+              name: "文字",
+              data: {
+                text: '请输入文字',
+                rect: {
+                  width: 100,
+                  height: 100
                 },
-                name:"div",
-                bkType:0,
-                fillStyle:"white"
+                name: "div",
+                bkType: 0,
+                fillStyle: "white"
+              }
+            },
+            {
+              cindex: "2",
+              iconname: 'icon-danxuanxuanzhong',
+              iconFamily: "iconfont",
+              name: "文字",
+              data: {
+                text: '请输入文字',
+                rect: {
+                  width: 200,
+                  height: 20
+                },
+                strokeStyle: "transparent",
+                icon: "\ue681",
+                iconFamily: "iconfont",
+                name: "rectangle",
+                bkType: 0,
+                fillStyle: "white",
+
               }
             }
           ]
         },
         {
+          findex: "2",
           labeltitle: "线对象",
           children: [
             {
+              cindex: "1",
               iconname: "icon-hengxian-",
               iconFamily: "iconfont",
               name: "横线",
@@ -97,6 +172,7 @@ export default {
               }
             },
             {
+              cindex: "2",
               iconname: "icon-xuxian",
               iconFamily: "iconfont",
               name: "虚线",
@@ -116,9 +192,11 @@ export default {
           ]
         },
         {
+          findex: "3",
           labeltitle: "变压器",
           children: [
             {
+              cindex: "1",
               iconname: "icon-srzdyhgq",
               iconFamily: "iconfont",
               name: "双绕组",
@@ -133,6 +211,7 @@ export default {
               }
             },
             {
+              cindex: "2",
               iconname: "icon-sanrzbyq_a",
               iconFamily: "iconfont",
               name: "双绕组",
@@ -147,6 +226,7 @@ export default {
               }
             },
             {
+              cindex: "3",
               iconname: "icon-srzbyq_p",
               iconFamily: "iconfont",
               name: "双绕组",
@@ -160,8 +240,8 @@ export default {
                 icon: "\ue636"
               }
             },
-
             {
+              cindex: "4",
               iconname: "icon-sanrzbyq_j",
               iconFamily: "iconfont",
               name: "双绕组",
@@ -170,17 +250,37 @@ export default {
                   width: 50,
                   height: 50
                 },
+                iconColor: "red",
                 name: "HlIcon",
                 iconFamily: "iconfont",
                 icon: "\ue627"
               }
-            }
+            },
+
           ]
         },
         {
-          labeltitle: "开断设备",
+          findex: "4",
+          labeltitle: "量测数据",
           children: [
-           
+            {
+              cindex: "1",
+              iconname: 'icon-dianliangceliangicon',
+              iconFamily: "iconfont",
+              name: "量测量",
+              modelValue: 1,
+              data: {
+                rect: {
+                  width: 100,
+                  height: 300
+                },
+                name: "div",
+                bkType: 0,
+                fillStyle: "white",
+                strokeStyle: 'transparent',
+                children: []
+              }
+            }
           ]
         }
       ],
@@ -214,8 +314,10 @@ export default {
 
     },
     setDate() {
-      // this.props.node.text = "这是修改的"
-      // this.canvas.render()
+
+      this.props.node.text = "这是修改的"
+      this.props.node.iconColor = "red"
+      this.canvas.render()
       // 连接建立时触发
       // Socket.onopen = function () {
       //   // 验证webscoket连接是否建立，是否可以进行通信
@@ -311,19 +413,108 @@ export default {
       }, 0);
     },
     drag(e, params) {
-      e.dataTransfer.setData('Topology', JSON.stringify(params))
+      switch (params.modelValue) {
+        case 1:
+          this.openmeasure()
+          this.meter = params.data
+          break;
+        default:
+          e.dataTransfer.setData('Topology', JSON.stringify(params.data))
+
+      }
+      // var str = document.getElementById("mysvg")
+      // var svgData = (new XMLSerializer()).serializeToString(str);
+      // var svgstr = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)))
     },
-      // eslint-disable-next-line no-useless-escape
-      // e.dataTransfer.setData('Topology', JSON.stringify(params))
-      // setInterval(() => {
-      //   console.log(1)
-      //   params.text = params.text += 1
-      //   e.dataTransfer.setData('Topology', JSON.stringify(params))
-      //   // new Node().emitRender()
-      // }, 3000)
-      // var a = this.canvas.addNode(new Node(params), true);
-      // this.canvas.open(a)
-      // this.canvas.render()
+    //弹出量测量的选项框
+    // eslint-disable-next-line no-unused-vars
+    openmeasure(value) {
+      this.dialogFormVisible = true
+    },
+    //通过选择渲染数据
+    survey() {
+      this.dialogFormVisible = false
+      // eslint-disable-next-line no-unused-vars
+      var list = []
+      var children = this.form.region
+      var y = 0
+      children.forEach(() => {
+        var obg = {
+          rectInParent: {
+            x: 0,
+            y: y,
+            width: "100%",
+            height: 30,
+            rotate: 0,
+          },
+          name: "div",
+          strokeStyle: 'transparent',
+          text: "第一组数据",
+          font: {
+            color: "transparent",
+          },
+          children: [
+            {
+              rectInParent: {
+                x: 0,
+                y: 0,
+                width: "100%",
+                height: 30,
+                rotate: 0,
+              },
+              name: "div",
+              strokeStyle: 'transparent',
+              text: "Su",
+              font: {
+                color: "black",
+                textAlign: 'left'
+              },
+            },
+            {
+              rectInParent: {
+                x: 0,
+                y: 0,
+                width: "100%",
+                height: 30,
+                rotate: 0,
+              },
+              name: "div",
+              strokeStyle: 'transparent',
+              text: "0.000",
+              font: {
+                fontSize: "14",
+                color: "black",
+                textAlign: 'center'
+              },
+            },
+            {
+              rectInParent: {
+                x: 0,
+                y: 0,
+                width: "100%",
+                height: 30,
+                rotate: 0,
+              },
+              name: "div",
+              strokeStyle: 'transparent',
+              text: "V",
+              font: {
+                fontSize: "14",
+                color: "black",
+                textAlign: 'right'
+              },
+            }
+          ]
+        }
+        list.push(obg)
+
+        y += 30
+      })
+      this.meter.children = list
+      this.meter.rect["x"] = 10
+      this.meter.rect["y"] = 10
+      this.canvas.addNode(this.meter, true);
+    },
     //从绘
     onUpdateProps(node) {
       // 如果是node属性改变，需要传入node，重新计算node相关属性值
@@ -391,14 +582,14 @@ i.icon {
 .topology-ipad:before {
   content: '\e664';
 }
-  .right-content{
-    float: right;
-    width: 200px;
-    height: 100vh;
-    padding: 0.1rem 0;
-    background-color: #f8f8f8;
-    border-left: 1px solid #d9d9d9;
-    overflow-y: auto;
-    position: relative;
-  }
+.right-content {
+  float: right;
+  width: 200px;
+  height: 100vh;
+  padding: 0.1rem 0;
+  background-color: #f8f8f8;
+  border-left: 1px solid #d9d9d9;
+  overflow-y: auto;
+  position: relative;
+}
 </style>
