@@ -227,7 +227,7 @@ export default {
           children: [
             {
               cindex: "1",
-              iconname: "icon-srzdyhgq",
+              iconname: "icon-tubiaozhizuomoban1",
               iconFamily: "iconfont",
               name: "双绕组",
               data: {
@@ -237,7 +237,7 @@ export default {
                 },
                 name: "HlIcon",
                 iconFamily: "iconfont",
-                icon: "\ue63a"
+                icon: "\ue60e"
               }
             },
             {
