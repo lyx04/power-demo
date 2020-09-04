@@ -22,7 +22,7 @@
               :index="item.findex+'-'+itemItem.cindex"
               :key="index1"
             >
-              <img v-if='itemItem.name === "image"' :src="itemItem.data.image" style="width: 50px;height: 50px;display: block;" @dragstart="drag($event,itemItem.data)"
+              <img v-if='itemItem.name === "image"' :src="itemItem.data.image" style="width: 50px;height: 50px;display: block;" @dragstart="drag($event,itemItem)"
                    draggable="true"/>
               <i
                 v-else
@@ -295,11 +295,13 @@ export default {
                   width: 100,
                   height: 300
                 },
+                tags:["data"],
                 name: "div",
                 bkType: 0,
                 fillStyle: "white",
                 strokeStyle: 'transparent',
-                children: []
+                children: [],
+                
               }
             }
           ]
@@ -559,6 +561,9 @@ export default {
       this.meter.rect["x"] = 10
       this.meter.rect["y"] = 10
       this.canvas.addNode(this.meter, true);
+      setTimeout(()=>{
+        console.log(this.canvas.find("data"))
+      },1000)
     },
     //从绘
     onUpdateProps(node) {
