@@ -304,11 +304,13 @@ export default {
                   width: 100,
                   height: 300
                 },
+                tags:["data"],
                 name: "div",
                 bkType: 0,
                 fillStyle: "white",
                 strokeStyle: 'transparent',
-                children: []
+                children: [],
+                
               }
             }
           ]
