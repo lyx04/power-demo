@@ -52,7 +52,7 @@
     <div class="button">
       <button @click="getText">获取文字</button>
       <button @click="setDate">修改数据</button>
-      <img src="./assets/v.svg" style="width: 10px;height: 10px;display: block;"/>
+      <button @click="concatNode">组合</button>
     </div>
     <el-dialog
       title="量测组"
@@ -324,6 +324,8 @@ export default {
         expand: false,
         locked: false
       },
+      //准备合并的节点
+      concatN:""
     }
   },
   mounted() {
@@ -339,6 +341,14 @@ export default {
     // this.canvas.render()
   },
   methods: {
+    concatNode(){
+       this.canvas.combine(this.concatN,true)
+
+    },
+    //合并节点
+    getLocked (node){
+      this.concatN = node.nodes
+    },
     onMenu(value) {
       switch (value) {
         case 'save':
@@ -372,7 +382,8 @@ export default {
     setDate() {
 
       this.props.node.text = "这是修改的"
-      this.props.node.iconColor = "red"
+      this.props.node.iconColor= 'red'
+      this.props.node.fillStyle = "red"
       this.canvas.render()
       // 连接建立时触发
       // Socket.onopen = function () {
@@ -410,6 +421,7 @@ export default {
               nodes: null,
               locked: data.locked
             };
+
             break;
           case 'line':
           case 'addLine':
