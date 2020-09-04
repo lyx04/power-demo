@@ -100,6 +100,8 @@ import { Topology, registerNode } from '@topology/core';
 import { MyShape } from './iconinit'
 import  CanvasProps from './components/CanvasProps'
 import CanvasHeaders from './components/CanvasHeaders'
+let socket;
+
 registerNode("HlIcon", MyShape)
 export default {
   name: 'App',
@@ -109,6 +111,13 @@ export default {
   },
   data() {
     return {
+      meterList:[],
+      // 连接标志位
+      lockReconnect: false,
+      wsCfg: {
+        // websocket地址
+        url: "ws://192.168.10.97:8181"
+      },
       canvas:{},
       dialogFormVisible: false,
       formLabelWidth: "80px",
@@ -494,6 +503,7 @@ export default {
             height: 30,
             rotate: 0,
           },
+          key: 'data1',
           name: "div",
           strokeStyle: 'transparent',
           text: "第一组数据",
@@ -554,16 +564,14 @@ export default {
           ]
         }
         list.push(obg)
-
         y += 30
       })
       this.meter.children = list
       this.meter.rect["x"] = 10
       this.meter.rect["y"] = 10
-      this.canvas.addNode(this.meter, true);
-      setTimeout(()=>{
-        console.log(this.canvas.find("data"))
-      },1000)
+      var as = this.canvas.addNode(this.meter, true);
+      this.meterList.push(as.id)
+      this.createWebSocket();
     },
     //从绘
     onUpdateProps(node) {
@@ -587,6 +595,59 @@ export default {
           bottom: document.body.clientHeight - event.clientY + 'px'
         };
       }
+    },
+    createWebSocket() {
+      try {
+        // 创建Web Socket 连接
+        socket = new WebSocket(this.wsCfg.url);
+        // 初始化事件
+        this.initEventHandle(socket);
+      } catch (e) {
+        // 出错时重新连接
+        this.reconnect(this.wsCfg.url);
+      }
+    },
+    initEventHandle(socket) {
+      // 连接关闭时触发
+      socket.onclose = () => {
+        console.log("连接关闭");
+      };
+      // 通信发生错误时触发
+      socket.onerror = () => {
+        // 重新创建长连接
+        this.reconnect();
+      };
+      // 连接建立时触发
+      socket.onopen = () => {
+        console.log("连接成功");
+      };
+      // 客户端接收服务端数据时触发
+      socket.onmessage = msg => {
+        // 业务逻辑处理
+        var data = JSON.parse(msg.data)
+        this.meterList.forEach((i)=>{
+          this.canvas.find(i).children[0].children[1].text = data[0].value
+        })
+        this.canvas.render()
+        // this.canvas.updateProps();
+      };
+    },
+    reconnect() {
+      if (this.lockReconnect) {
+        return;
+      }
+      this.lockReconnect = true;
+
+      // 没连接上会一直重连，设置延迟避免请求过多
+      setTimeout(() => {
+        this.lockReconnect = false;
+        this.createWebSocket(this.wsCfg.url);
+      }, 2000);
+    },
+    test() {
+      // 给服务器发送一个字符串:
+      // ws.send("Hello!");
+      socket.send("Hello!");
     }
   }
 }
