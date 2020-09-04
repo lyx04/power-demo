@@ -2,7 +2,7 @@
 power-demo
 
 # 画布默认参数
-combine
+combine 组合
 div 正方形
 rectangle 矩形
 circle 圆形

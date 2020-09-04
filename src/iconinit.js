@@ -2,9 +2,24 @@ import { Rect } from '@topology/core';
 
 export function MyShape(ctx) {
   ctx.beginPath();
+  // ctx.fillStyle = "black"
+  // ctx.moveTo(0, 50)
+  // ctx.lineTo(50, 50)
+  // ctx.stroke()
+  // ctx.beginPath();
+  // ctx.moveTo(50, 0)
+  // ctx.lineTo(50, 100)
+  // ctx.stroke()
+  // ctx.beginPath();
+  // ctx.moveTo(70,0)
+  // ctx.lineTo(70,100)
+  // ctx.stroke()
+  // ctx.beginPath();
+  // ctx.moveTo(70,50)
+  // ctx.lineTo(120,50)
+  // ctx.stroke()
 }
 export function myIconRect(node) {
-  console.log(node)
   node.iconRect = new Rect(node.rect.x, node.rect.y + 10, node.rect.width, (node.rect.height * 2) / 3 - 20);
   node.fullIconRect = node.rect;
 }
