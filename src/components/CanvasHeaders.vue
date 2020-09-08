@@ -27,7 +27,7 @@
           v-for="(item, index) in lineNames"
           :key="index"
           :index="`line-${item}`"
-          @click="onState('lineName', item)"
+          @click="onState('name', item)"
         >
           <i :class="`iconfont icon-${item}`"></i>
         </el-menu-item>
@@ -42,7 +42,7 @@
           v-for="(item, index) in arrowTypes"
           :key="index"
           :index="`fromArrow-${item}`"
-          @click="onState('fromArrowType', item)"
+          @click="onState('fromArrow', item)"
         >
           <i :class="`iconfont icon-from-${item}`"></i>
         </el-menu-item>
@@ -57,7 +57,7 @@
           v-for="(item, index) in arrowTypes"
           :key="index"
           :index="`toArrow-${item}`"
-          @click="onState('toArrowType', item)"
+          @click="onState('toArrow', item)"
         >
           <i :class="`iconfont icon-to-${item}`"></i>
         </el-menu-item>
