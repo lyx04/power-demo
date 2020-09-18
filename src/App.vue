@@ -166,6 +166,7 @@ export default {
   },
   data() {
     return {
+      iconStr: "te-kaiguan:e631,te-jiedi:e630,te-bihe:e62f,te-1-6:e62e,te-1-5:e62d,te-1-4:e62c,te-1-3:e62b,te-1-2:e62a,te-1-1:e629,te-duanluqi:e628,te-dianqiyuanqijian-10:e627,te-dianqiyuanqijian-09:e626,te-dianqiyuanqijian-08:e625,te-dianqiyuanqijian-07:e624,te-dianqiyuanqijian-06:e623,te-dianqiyuanqijian-05:e622,te-dianqiyuanqijian-04:e621,te-dianqiyuanqijian-03:e620,te-dianqiyuanqijian_huaban1fuben:e61f,te-dianqiyuanqijian-02:e61e,te-zhishideng:e61b,te-lvboqi:e61a,te-duanluqi--2:e619,te-dianrongqi:e618,te-changkaichudian:e617,te-changbichudian:e616,te-dianqi--anniu:e614",
       meterList: [],
       // 连接标志位
       lockReconnect: false,
@@ -280,72 +281,6 @@ export default {
           findex: "3",
           labeltitle: "变压器",
           children: [
-            {
-              cindex: "1",
-              iconname: "icon-tubiaozhizuomoban1",
-              iconFamily: "iconfont",
-              name: "双绕组",
-              data: {
-                rect: {
-                  width: 50,
-                  height: 50
-                },
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-                name: "HlIcon",
-                iconFamily: "iconfont",
-                icon: "\ue60e"
-              }
-            },
-            {
-              cindex: "2",
-              iconname: "icon-sanrzbyq_a",
-              iconFamily: "iconfont",
-              name: "双绕组",
-              data: {
-                rect: {
-                  width: 50,
-                  height: 50
-                },
-                name: "HlIcon",
-                iconFamily: "iconfont",
-                icon: "\ue624"
-              }
-            },
-            {
-              cindex: "3",
-              iconname: "icon-srzbyq_p",
-              iconFamily: "iconfont",
-              name: "双绕组",
-              data: {
-                rect: {
-                  width: 50,
-                  height: 50
-                },
-                name: "HlIcon",
-                iconFamily: "iconfont",
-                icon: "\ue636"
-              }
-            },
-            {
-              cindex: "4",
-              iconname: "icon-sanrzbyq_j",
-              iconFamily: "iconfont",
-              name: "双绕组",
-              data: {
-                rect: {
-                  width: 50,
-                  height: 50
-                },
-                iconColor: "red",
-                name: "HlIcon",
-                iconFamily: "iconfont",
-                icon: "\ue627"
-              }
-            },
-
           ]
         },
         {
@@ -388,6 +323,30 @@ export default {
     }
   },
   mounted() {
+    this.iconStr = this.iconStr.split(",")
+    this.iconStr.forEach((i,v) => {
+      var item = i.split(":")
+      var obj = {
+        cindex: v + 1,
+        iconname: item[0],
+        iconFamily: "ltee",
+        name: "双绕组",
+        data: {
+          rect: {
+            width: 50,
+            height: 50
+          },
+          paddingTop: 0,
+          paddingBottom: 0,
+          paddingLeft: 0,
+          paddingRight: 0,
+          name: "HlIcon",
+          iconFamily: "ltee",
+          icon:String.fromCharCode('0x'+item[1])
+        }
+      }
+      this.tools[2].children.push(obj)
+    })
     var self = this
     this.canvas = new Topology('appId', {
       on: self.onMessage,
@@ -561,6 +520,7 @@ export default {
           this.meter = params.data
           break;
         default:
+          console.log(params)
           e.dataTransfer.setData('Topology', JSON.stringify(params.data))
 
       }
@@ -740,6 +700,7 @@ export default {
 </script>
 
 <style>
+@import url('~@/assets/css/iconfont.css');
 @font-face {
   font-family: 'topology';
   src: url('http://at.alicdn.com/t/font_1331132_h688rvffmbc.ttf?t=1569311680797')
@@ -759,7 +720,7 @@ export default {
   font-size: 14px;
 }
 i.icon {
-  font-family: topology;
+  font-family: ltee;
   font-size: 24px;
   font-style: normal;
   color: black !important;
